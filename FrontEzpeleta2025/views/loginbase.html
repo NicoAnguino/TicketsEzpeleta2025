@@ -1,0 +1,23 @@
+
+    <h2>Registro</h2>
+    <form id="registerForm">
+        <input type="text" id="regNombre" placeholder="Nombre completo" required><br>
+        <input type="email" id="regEmail" placeholder="Email" required><br>
+        <input type="password" id="regPassword" placeholder="Contraseña" required><br>
+        <button type="submit">Registrar</button>
+    </form>
+
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required><br>
+        <input type="password" id="loginPassword" placeholder="Contraseña" required><br>
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+
+    <h3>Token JWT (A MODO DE PRUEBA)</h3>
+    <pre id="tokenOutput"></pre>
+
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+
+  
+    <script src="../js/user.js"></script>

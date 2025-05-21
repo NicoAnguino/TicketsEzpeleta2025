@@ -1,0 +1,53 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0">Listado de Categorías</h1>
+    <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+</div>
+
+<a href="#" data-toggle="modal" data-target="#categoriaModal" class="btn btn-primary btn-icon-split mb-4">
+    <span class="icon text-white-50">
+        <i class="fas fa-check"></i>
+    </span>
+    <span class="text">Nueva Categoria</span>
+</a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="categoriaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Registro de Categoria</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+                <input type="hidden" id="editarCategoriaId" disabled placeholder="0">
+                <label class="control-label">Descripción</label>
+                <input class="form-control form-control-sm" type="text" id="categoriaNombre" placeholder="Nombre de la Categoria">
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" onclick="limpiarFormulario()" data-dismiss="modal">Cancelar</button>
+              <button class="btn btn-primary" onclick="guardarCategoria()">Guardar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-sm" id="tablaCategorias" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th style="width: 110px;" class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script src="../js/fetch/categorias.js"></script>
