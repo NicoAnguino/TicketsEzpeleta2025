@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ezpeleta2025.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250410222455_TablaCategoria")]
-    partial class TablaCategoria
+    [Migration("20250515221456_HistorialTickets")]
+    partial class HistorialTickets
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,6 +109,75 @@ namespace Ezpeleta2025.Migrations
                     b.HasKey("CategoriaID");
 
                     b.ToTable("Categorias");
+                });
+
+            modelBuilder.Entity("Ezpeleta2025.Models.General.HistorialTicket", b =>
+                {
+                    b.Property<int>("HistorialTicketID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistorialTicketID"));
+
+                    b.Property<string>("CampoModificado")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCambio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TicketID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ValorAnterior")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ValorNuevo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("HistorialTicketID");
+
+                    b.ToTable("HistorialTickets");
+                });
+
+            modelBuilder.Entity("Ezpeleta2025.Models.General.Ticket", b =>
+                {
+                    b.Property<int>("TicketID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketID"));
+
+                    b.Property<int>("CategoriaID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaCierre")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Prioridad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioClienteID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TicketID");
+
+                    b.HasIndex("CategoriaID");
+
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -244,6 +313,17 @@ namespace Ezpeleta2025.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Ezpeleta2025.Models.General.Ticket", b =>
+                {
+                    b.HasOne("Ezpeleta2025.Models.General.Categoria", "Categoria")
+                        .WithMany("Tickets")
+                        .HasForeignKey("CategoriaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -293,6 +373,11 @@ namespace Ezpeleta2025.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Ezpeleta2025.Models.General.Categoria", b =>
+                {
+                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,4 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     // Agrega tus DbSet aquí
     public DbSet<Categoria> Categorias { get; set; }
+    public DbSet<Ticket> Tickets { get; set; }
+    
+    public DbSet<HistorialTicket> HistorialTickets { get; set; }
 }

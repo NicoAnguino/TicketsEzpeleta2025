@@ -8,5 +8,7 @@ namespace Ezpeleta2025.Models.General
         public int CategoriaID { get; set;}
         public string? Nombre { get; set; }
         public bool Eliminado { get; set; }
+
+        public virtual ICollection<Ticket>? Tickets { get; set; }
     }
 }

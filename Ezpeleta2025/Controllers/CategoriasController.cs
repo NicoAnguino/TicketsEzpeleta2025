@@ -24,10 +24,10 @@ namespace APILogin2025.Controllers
 
         // GET: api/Categorias
         [HttpGet]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
         {
-            return await _context.Categorias.ToListAsync();
+            return await _context.Categorias.OrderBy(c => c.Nombre).ToListAsync();
         }
 
         // GET: api/Categorias/5
@@ -88,16 +88,24 @@ namespace APILogin2025.Controllers
 
         // DELETE: api/Categorias/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategoria(int id)
+        public async Task<IActionResult> DeleteCategoria(int id, int accion)
         {
             var categoria = await _context.Categorias.FindAsync(id);
             if (categoria == null)
             {
                 return NotFound();
             }
-
-            _context.Categorias.Remove(categoria);
-            await _context.SaveChangesAsync();
+            if (accion == 1)
+            {
+                categoria.Eliminado = true;
+                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                categoria.Eliminado = false;
+                 await _context.SaveChangesAsync();
+            }
+           
 
             return NoContent();
         }

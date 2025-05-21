@@ -53,6 +53,16 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PoliticaCors", policy =>
+    {
+         policy.WithOrigins("http://200.63.125.23:20251") // solo ese origen
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 //HASTA ACA
 
 // Add services to the container.
@@ -61,6 +71,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+
+//DESDE ACA
+app.UseCors("AllowAll");
+//app.UseCors("PoliticaCors");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -71,8 +86,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//DESDE ACA
-app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
