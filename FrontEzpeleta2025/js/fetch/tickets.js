@@ -69,9 +69,9 @@ function guardarTicket() {
             updateTicket();
         }
     }
-else {
-    alert("Ingrese el titulo");
-}
+    else {
+        alert("Ingrese el titulo");
+    }
 
 }
 
@@ -159,5 +159,97 @@ async function updateTicket() {
     }
 }
 
-
 getTickets();
+
+function Imprimir() {
+    var doc = new jsPDF();
+    //var doc = new jsPDF('l', 'mm', [297, 210]);
+
+    var totalPagesExp = "{total_pages_count_string}";
+    var pageContent = function (data) {
+
+        var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+        var pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+
+        // FOOTER
+        var str = "Pagina " + data.pageCount;
+        // Total page number plugin only available in jspdf v1.0+
+        if (typeof doc.putTotalPages == 'function') {
+            str = str + " de " + totalPagesExp;
+        }
+
+        doc.setLineWidth(8);
+        doc.setDrawColor(78, 115, 223);
+        doc.setTextColor(255, 255, 255);
+        doc.line(14, pageHeight - 11, 196, pageHeight - 11);
+
+        doc.setFontSize(10);
+
+        doc.setFontStyle('bold');
+
+        doc.text(str, 17, pageHeight - 10);
+    };
+
+
+    var elem = document.getElementById("tablaTickets");
+    var res = doc.autoTableHtmlToJson(elem);
+
+    // Eliminar la columna 5 (índice 5)
+    res.columns.splice(5, 1); // Elimina la columna de encabezado
+    res.data = res.data.map(row => {
+        row.splice(5, 1); // Elimina la celda correspondiente de cada fila
+        return row;
+    });
+
+    doc.autoTable(res.columns, res.data,
+        {
+            addPageContent: pageContent,
+            margin: { top: 15 },
+            styles: {
+                fillStyle: 'DF',
+                overflow: 'linebreak',
+                columnWidth: 110,
+                lineWidth: 0.1,
+                lineColor: [238, 238, 238]
+            },
+            headerStyles: {
+                fillColor: [78, 115, 223],
+                textColor: [255, 255, 255]
+            },
+            columnStyles: {
+                0: { columnWidth: 28 },//FECHA
+                1: { columnWidth: 62 },//TITULO
+                2: { columnWidth: 50 },//CATEGORIA
+                3: { columnWidth: 20 },//PRIORIDAD
+                4: { columnWidth: 20 }//ESTADO
+            },
+            createdHeaderCell: function (cell, opts) {
+                if (opts.column.index == 0 || opts.column.index == 3 || opts.column.index == 4) {
+                    cell.styles.halign = 'center';
+                }
+                cell.styles.fontSize = 8;
+            },
+            createdCell: function (cell, opts) {
+                cell.styles.fontSize = 7;
+                if (opts.column.index == 0 || opts.column.index == 3 || opts.column.index == 4) {
+                    cell.styles.halign = 'center';
+                }
+            }
+        }
+    );
+
+    // ESTO SE LLAMA ANTES DE ABRIR EL PDF PARA QUE MUESTRE EN EL PDF EL NRO TOTAL DE PAGINAS. ACA CALCULA EL TOTAL DE PAGINAS.
+    if (typeof doc.putTotalPages === 'function') {
+        doc.putTotalPages(totalPagesExp);
+    }
+
+    //doc.save('Listado de Tickets.pdf')
+
+    var string = doc.output('datauristring');
+    var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
+
+    var x = window.open();
+    x.document.open();
+    x.document.write(iframe);
+    x.document.close();
+}
