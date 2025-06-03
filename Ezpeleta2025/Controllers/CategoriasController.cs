@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ezpeleta2025.Models.General;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace APILogin2025.Controllers
 {
@@ -27,6 +28,8 @@ namespace APILogin2025.Controllers
         //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
         {
+             var usuarioLogueadoID = HttpContext.User.Identity.Name;
+             var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return await _context.Categorias.OrderBy(c => c.Nombre).ToListAsync();
         }
 
