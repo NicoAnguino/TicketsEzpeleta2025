@@ -30,6 +30,7 @@ namespace APILogin2025.Controllers
         {
              var usuarioLogueadoID = HttpContext.User.Identity.Name;
              var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+             var rol = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
             return await _context.Categorias.OrderBy(c => c.Nombre).ToListAsync();
         }
 
