@@ -11,13 +11,21 @@
     <span class="text">Nuevo Ticket</span>
 </a>
 
-  <a class="btn btn-primary btn-icon-split mb-4" onclick="Imprimir()">
-<span class="icon text-white-50">
+<a class="btn btn-primary btn-icon-split mb-4" onclick="Imprimir()">
+    <span class="icon text-white-50">
         <i class="fas fa-print"></i>
     </span>
     <span class="text">Generar Informe PDF</span>
-    
+
 </a>
+
+<div class="row">
+    <div class="col-md-4 mb-2">
+        <label class="control-label">Categoría</label>
+        <select class="form-control form-control-sm" id="CategoriaIDBuscar"></select>
+    </div>
+</div>
+
 
 <!-- Logout Modal-->
 <div class="modal fade" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

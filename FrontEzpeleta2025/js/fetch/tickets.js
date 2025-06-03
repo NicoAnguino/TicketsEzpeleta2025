@@ -4,19 +4,45 @@ async function comboCategorias() {
     const res = await authFetch("categorias");
 
     const categorias = await res.json();
+
+    const comboSelectBuscar = document.querySelector("#CategoriaIDBuscar");
+    comboSelectBuscar.innerHTML = "";
     const comboSelect = document.querySelector("#ticketCategoriaID");
     comboSelect.innerHTML = "";
+
+    let opcionesBuscar = `<option value="0">[Todas las categorias]</option>`;
     let opciones = '';
     categorias.forEach(cat => {
 
         opciones += `<option value="${cat.categoriaID}">${cat.nombre}</option>`;
-
+        opcionesBuscar += `<option value="${cat.categoriaID}">${cat.nombre}</option>`;
     });
     comboSelect.innerHTML = opciones;
+    comboSelectBuscar.innerHTML = opcionesBuscar;
+
+    getTickets();
 }
 
+const input = document.getElementById("CategoriaIDBuscar");
+input.onchange = function () {
+  getTickets();
+};
+
 async function getTickets() {
-    const res = await authFetch("tickets");
+    //const res = await authFetch("tickets");
+    let categoriaIDBuscar = document.getElementById("CategoriaIDBuscar").value;
+    const filtros = {
+        categoriaID: categoriaIDBuscar
+    };
+
+    const res = await authFetch(`tickets/filtrar`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(filtros)
+    });
+
     const tickets = await res.json();
     const tbody = document.querySelector("#tablaTickets tbody");
     tbody.innerHTML = "";
@@ -47,7 +73,7 @@ async function getTickets() {
 
     $("#ticketModal").modal("hide");
 
-    comboCategorias();
+    //comboCategorias();
 }
 
 function limpiarFormulario() {
@@ -159,7 +185,8 @@ async function updateTicket() {
     }
 }
 
-getTickets();
+//getTickets();
+comboCategorias();
 
 function Imprimir() {
     var doc = new jsPDF();
