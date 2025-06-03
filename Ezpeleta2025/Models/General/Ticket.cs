@@ -56,4 +56,9 @@ namespace Ezpeleta2025.Models.General
         Media,
         Alta
     }
+
+    public class FiltroTicket
+    {
+        public int CategoriaID {get; set; }
+    }
 }

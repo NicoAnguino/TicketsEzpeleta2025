@@ -43,6 +43,34 @@ namespace APILogin2025.Controllers
             return vista.ToList();
         }
 
+        [HttpPost("filtrar")]
+        public async Task<ActionResult<IEnumerable<VistaTickets>>> FiltrarTickets([FromBody] FiltroTicket filtro)
+        {
+            List<VistaTickets> vista = new List<VistaTickets>();
+
+            var tickets = _context.Tickets.Include(t => t.Categoria).AsQueryable();
+
+            if (filtro.CategoriaID > 0)
+                tickets = tickets.Where(t => t.CategoriaID == filtro.CategoriaID);
+
+            foreach (var ticket in tickets.OrderByDescending(t => t.FechaCreacion))
+            {
+                var ticketMostrar = new VistaTickets
+                {
+                    TicketID = ticket.TicketID,
+                    Titulo = ticket.Titulo,
+                    FechaCreacionString = ticket.FechaCreacionString,
+                    Prioridad = ticket.Prioridad,
+                    EstadoString = ticket.EstadoString,
+                    CategoriaString = ticket.CategoriaString,
+                    PrioridadString = ticket.PrioridadString
+                };
+                vista.Add(ticketMostrar);
+            }
+
+            return vista.ToList();
+        }
+
         // GET: api/GetTicket/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Ticket>> GetTicket(int id)
