@@ -59,6 +59,10 @@ namespace Ezpeleta2025.Models.General
 
     public class FiltroTicket
     {
-        public int CategoriaID {get; set; }
+        public string? FechaDesde { get; set; }
+        public string? FechaHasta { get; set; }
+        public int CategoriaID { get; set; }
+        public int Prioridad { get; set; }
+        public int Estado { get; set; }
     }
 }

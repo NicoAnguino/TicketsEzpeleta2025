@@ -53,15 +53,15 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("PoliticaCors", policy =>
-    {
-         policy.WithOrigins("http://200.63.125.23:20251") // solo ese origen
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("PoliticaCors", policy =>
+//     {
+//          policy.WithOrigins("http://200.63.125.23:20251") // solo ese origen
+//               .AllowAnyMethod()
+//               .AllowAnyHeader();
+//     });
+// });
 
 //HASTA ACA
 
@@ -72,11 +72,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-
-//DESDE ACA
-app.UseCors("AllowAll");
-//app.UseCors("PoliticaCors");
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -86,6 +81,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting(); // ✅ Necesario para que funcione CORS correctamente
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
