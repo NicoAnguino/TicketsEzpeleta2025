@@ -23,16 +23,54 @@ async function comboCategorias() {
     getTickets();
 }
 
-const input = document.getElementById("CategoriaIDBuscar");
-input.onchange = function () {
+const inputCategoria = document.getElementById("CategoriaIDBuscar");
+inputCategoria.onchange = function () {
+  getTickets();
+};
+
+const inputPrioridad = document.getElementById("PrioridadIDBuscar");
+inputPrioridad.onchange = function () {
+  getTickets();
+};
+
+const inputEstado = document.getElementById("EstadoIDBuscar");
+inputEstado.onchange = function () {
+  getTickets();
+};
+
+const inputFechaDesde = document.getElementById("FechaDesdeBuscar");
+inputFechaDesde.onchange = function () {
+  getTickets();
+};
+
+const inputFechaHasta = document.getElementById("FechaHastaBuscar");
+inputFechaHasta.onchange = function () {
   getTickets();
 };
 
 async function getTickets() {
     //const res = await authFetch("tickets");
-    let categoriaIDBuscar = document.getElementById("CategoriaIDBuscar").value;
+
+    let fechaDesde = document.getElementById("FechaDesdeBuscar").value;
+    let fechaHasta = document.getElementById("FechaHastaBuscar").value;
+
+ // Convertir a objetos Date
+    const fecha1 = new Date(fechaDesde);
+    const fecha2 = new Date(fechaHasta);
+
+    // Comparar
+    if (fecha1 > fecha2) {
+        //console.log("Fecha 1 es mayor que Fecha 2");
+        fechaHasta = fechaDesde ;
+        document.getElementById("FechaHastaBuscar").value = fechaDesde;
+    } 
+
     const filtros = {
-        categoriaID: categoriaIDBuscar
+        fechaDesde: fechaDesde,
+        fechaHasta: fechaHasta,
+        categoriaID: document.getElementById("CategoriaIDBuscar").value,
+        prioridad: document.getElementById("PrioridadIDBuscar").value,
+        estado: document.getElementById("EstadoIDBuscar").value
     };
 
     const res = await authFetch(`tickets/filtrar`, {
