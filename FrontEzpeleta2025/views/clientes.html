@@ -1,0 +1,70 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0">Listado de Clientes</h1>
+</div>
+
+<a href="#" data-toggle="modal" data-target="#clienteModal" class="btn btn-primary btn-icon-split mb-4">
+    <span class="icon text-white-50">
+        <i class="fas fa-check"></i>
+    </span>
+    <span class="text">Nuevo Cliente</span>
+</a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="clienteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Registro de Cliente</h5>
+              <button class="close" type="button" onclick="limpiarFormulario()" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+                <input type="hidden" id="editarClienteId" disabled placeholder="0">
+                <label class="control-label">Nombre / Razón Social</label>
+                <input class="form-control form-control-sm" type="text" id="clienteNombre" placeholder="Nombre del Cliente">
+            </div>
+             <div class="mb-3">
+                <label class="control-label">DNI/Cuit</label>
+                <input class="form-control form-control-sm" type="text" id="clienteDNI" placeholder="DNI o Cuit del Cliente">
+            </div>
+              <div class="mb-3">
+                <label class="control-label">Email</label>
+                <input class="form-control form-control-sm" type="text" id="clienteEmail" placeholder="Email del Cliente">
+            </div>
+              <div class="mb-3">
+                <label class="control-label">Teléfono</label>
+                <input class="form-control form-control-sm" type="text" id="clienteTeléfono" placeholder="Teléfono del Cliente">
+            </div>
+              <div class="mb-3">
+                <label class="control-label">Observaciones</label>
+                <textarea class="form-control form-control-sm" type="text" id="clienteObservacion" placeholder="Observación del Cliente"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" onclick="limpiarFormulario()" data-dismiss="modal">Cancelar</button>
+              <button class="btn btn-primary" onclick="guardarCliente()">Guardar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-sm" id="tablaClientes" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                 <th>DNI / CUIT</th>
+                  <th>Email</th>
+                    <th>Teléfono</th>
+                <th style="width: 110px;" class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script src="../js/fetch/clientes.js"></script>
