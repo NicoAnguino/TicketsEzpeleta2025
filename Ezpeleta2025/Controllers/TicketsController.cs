@@ -2,6 +2,7 @@ using Ezpeleta2025.Models.General;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace APILogin2025.Controllers
 {
@@ -49,6 +50,15 @@ namespace APILogin2025.Controllers
             List<VistaTickets> vista = new List<VistaTickets>();
 
             var tickets = _context.Tickets.Include(t => t.Categoria).AsQueryable();
+
+            //VER DE ACUERDO AL ROL QUE TIENE SI DEBE FILTRAR POR USUARIO O NO
+              //var usuarioLogueadoID = HttpContext.User.Identity.Name;
+             var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+             var rol = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (rol == "CLIENTE") {
+                  tickets = tickets.Where(t => t.UsuarioClienteID == userId);
+             }
 
             if (filtro.CategoriaID > 0)
                 tickets = tickets.Where(t => t.CategoriaID == filtro.CategoriaID);
@@ -197,6 +207,7 @@ namespace APILogin2025.Controllers
         [HttpPost]
         public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
         {
+              var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             //LO QUE DEBEMOS HACER ES GUARDAR LOS SIGUIENTES DATOS FIJOS
             //EL ESTADO DEL TICKET POR DEFECTO ES ABIERTO
             ticket.Estado = EstadoTicket.Abierto;
@@ -204,6 +215,7 @@ namespace APILogin2025.Controllers
             ticket.FechaCreacion = DateTime.Now;
             //LA FECHA DE CIERRE = UNA FECHA FIJA ESTANDAR HASTA QUE SE CIERRE REALMENTE EL TICKET
             ticket.FechaCierre = Convert.ToDateTime("01/01/2025");
+            ticket.UsuarioClienteID = userId;
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
 
