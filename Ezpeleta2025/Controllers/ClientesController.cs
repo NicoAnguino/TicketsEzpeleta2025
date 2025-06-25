@@ -28,6 +28,7 @@ namespace APILogin2025.Controllers
         }
 
         // GET: api/Clientes
+        //[Authorize(Roles = "ADMINISTRADOR")]
         [HttpGet]
         //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes()
