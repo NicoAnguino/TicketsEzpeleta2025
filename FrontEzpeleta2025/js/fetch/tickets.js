@@ -233,6 +233,23 @@ function Imprimir() {
     var totalPagesExp = "{total_pages_count_string}";
     var pageContent = function (data) {
 
+        doc.setDrawColor(78, 115, 223);
+        doc.setLineWidth(0.7);
+        doc.rect(14, 10, 30, 20, 'S');
+        doc.rect(44, 10, 151, 20, 'S');
+
+        doc.setFontSize(12);
+        doc.text("Listado de Tickets", 46, 15);
+        doc.text("Con métodos de búsqueda", 46, 22);
+         doc.text("Version del sistema: 1.0.0", 46, 28.5);
+        
+        
+        doc.setLineWidth(0.5);
+        doc.line(44, 17, 195, 17, 'S');
+
+         doc.line(44, 24, 195, 24, 'S');
+      
+
         var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
         var pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
 
@@ -269,7 +286,7 @@ function Imprimir() {
     doc.autoTable(res.columns, res.data,
         {
             addPageContent: pageContent,
-            margin: { top: 15 },
+            margin: { top: 32 },
             styles: {
                 fillStyle: 'DF',
                 overflow: 'linebreak',
