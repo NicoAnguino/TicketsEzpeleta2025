@@ -51,7 +51,14 @@ namespace APILogin2025.Controllers
 
             var tickets = _context.Tickets.Include(t => t.Categoria).AsQueryable();
 
-<<<<<<< HEAD
+            //VER DE ACUERDO AL ROL QUE TIENE SI DEBE FILTRAR POR USUARIO O NO
+              //var usuarioLogueadoID = HttpContext.User.Identity.Name;
+             var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+             var rol = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (rol == "CLIENTE") {
+                  tickets = tickets.Where(t => t.UsuarioClienteID == userId);
+             }
 
             DateTime fechaDesde = new DateTime();
             bool fechaDesdeValida = DateTime.TryParse(filtro.FechaDesde, out fechaDesde);
@@ -65,16 +72,6 @@ namespace APILogin2025.Controllers
                 fechaHasta = fechaHasta.AddSeconds(59);
                  tickets = tickets.Where(t => t.FechaCreacion >= fechaDesde && t.FechaCreacion <= fechaHasta);
             }
-=======
-            //VER DE ACUERDO AL ROL QUE TIENE SI DEBE FILTRAR POR USUARIO O NO
-              //var usuarioLogueadoID = HttpContext.User.Identity.Name;
-             var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-             var rol = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-
-            if (rol == "CLIENTE") {
-                  tickets = tickets.Where(t => t.UsuarioClienteID == userId);
-             }
->>>>>>> 10678f21572d7208b67990e6babe0c07939ce48c
 
             if (filtro.CategoriaID > 0)
                 tickets = tickets.Where(t => t.CategoriaID == filtro.CategoriaID);
