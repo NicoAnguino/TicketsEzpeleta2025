@@ -1,6 +1,6 @@
 async function getPuestoLaborales() {
 
-    const getToken = () => localStorage.getItem("token");
+    //const getToken = () => localStorage.getItem("token");
 
     const res = await authFetch("puestolaborales");
     //console.log(getToken());
