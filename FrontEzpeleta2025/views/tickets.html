@@ -90,6 +90,10 @@
                     <label class="control-label">Categoría</label>
                     <select class="form-control form-control-sm" id="ticketCategoriaID"></select>
                 </div>
+                  <div class="mb-2 ocultar-elemento" id="div-usuario-crea">
+                    <label class="control-label">Usuario Creador</label>
+                    <input class="form-control form-control-sm" id="ticketUsuarioEmail" disabled />
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" onclick="limpiarFormulario()"
@@ -119,6 +123,7 @@
                             <th style="width: 150px;">Campo Modificado</th>
                             <th>Valor Anterior</th>
                             <th>Valor Nuevo</th>
+                            <th>Usuario Edita</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

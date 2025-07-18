@@ -119,6 +119,8 @@ function limpiarFormulario() {
     document.getElementById("ticketId").value = 0;
     document.getElementById("ticketTitulo").value = '';
     document.getElementById("ticketDescripcion").value = '';
+    document.getElementById("ticketUsuarioEmail").value = '';
+    $("#div-usuario-crea").addClass("ocultar-elemento");
 }
 
 function guardarTicket() {
@@ -176,7 +178,8 @@ async function buscarHistorial(ticketID) {
             <td class="text-center">${tic.fechaCambioString}</td>
             <td class='text-bold'>${tic.campoModificado}</td>
             <td>${tic.valorAnterior}</td>
-             <td>${tic.valorNuevo}</td>
+            <td>${tic.valorNuevo}</td>
+            <td>${tic.usuarioEmail}</td>
         `;
         tbody.appendChild(row);
     });
@@ -193,6 +196,8 @@ async function prepararEdicion(ticketID) {
     document.getElementById("ticketDescripcion").value = ticket.descripcion;
     document.getElementById("ticketPrioridad").value = ticket.prioridad;
     document.getElementById("ticketCategoriaID").value = ticket.categoriaID;
+    document.getElementById("ticketUsuarioEmail").value = ticket.usuarioClienteEmail;
+    $("#div-usuario-crea").removeClass("ocultar-elemento");
     $("#ticketModal").modal("show");
 }
 
