@@ -21,7 +21,7 @@ async function getCategorias() {
     //   body: JSON.stringify({ nombre: "Coca Cola" })
     // });
 
-    console.log(getToken());
+    //console.log(getToken());
     const categorias = await res.json();
     const tbody = document.querySelector("#tablaCategorias tbody");
     tbody.innerHTML = "";
