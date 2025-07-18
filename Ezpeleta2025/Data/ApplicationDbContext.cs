@@ -15,4 +15,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<HistorialTicket> HistorialTickets { get; set; }
     public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<PuestoLaboral> PuestoLaborales { get; set; }
+      public DbSet<Desarrollador> Desarrolladores { get; set; }
 }

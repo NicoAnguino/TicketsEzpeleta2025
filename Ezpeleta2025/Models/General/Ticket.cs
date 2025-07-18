@@ -28,6 +28,9 @@ namespace Ezpeleta2025.Models.General
         public int CategoriaID { get; set; }
         public string? UsuarioClienteID { get; set; }
 
+        [NotMapped]
+        public string? UsuarioClienteEmail { get; set; }
+
         public virtual Categoria? Categoria { get; set; }
     }
 

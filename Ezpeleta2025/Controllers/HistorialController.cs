@@ -26,7 +26,19 @@ namespace APILogin2025.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<HistorialTicket>>> GetHistorial(int id)
         {
-            return await _context.HistorialTickets.Where(h => h.TicketID == id).OrderByDescending(c => c.FechaCambio).ToListAsync();
-        }        
+
+            var historialTicket = await _context.HistorialTickets.Where(h => h.TicketID == id).OrderByDescending(c => c.FechaCambio).ToListAsync();
+            foreach (var historial in historialTicket)
+            {
+                var usuarioCrea = _context.Users.Where(u => u.Id == historial.UsuarioID).SingleOrDefault();
+                if (usuarioCrea != null)
+                {
+                    historial.UsuarioEmail = usuarioCrea.Email;
+                }
+            }
+
+
+            return historialTicket.ToList();
+        }
     }
 }

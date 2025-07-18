@@ -107,12 +107,17 @@ namespace APILogin2025.Controllers
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
             var ticket = await _context.Tickets.FindAsync(id);
-
+           
             if (ticket == null)
             {
                 return NotFound();
             }
 
+            var usuarioCrea = _context.Users.Where(u => u.Id == ticket.UsuarioClienteID).SingleOrDefault();
+            if (usuarioCrea != null) {
+                ticket.UsuarioClienteEmail = usuarioCrea.Email;
+            }
+            
             return ticket;
         }
 
@@ -120,6 +125,8 @@ namespace APILogin2025.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTicket(int id, Ticket ticket)
         {
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (id != ticket.TicketID)
             {
                 return BadRequest();
@@ -144,7 +151,8 @@ namespace APILogin2025.Controllers
                             CampoModificado = "TITULO",
                             ValorAnterior = ticketEditar.Titulo,
                             ValorNuevo = ticket.Titulo,
-                            FechaCambio = fechaCambio
+                            FechaCambio = fechaCambio,
+                            UsuarioID = userId
                         };
                         _context.HistorialTickets.Add(historialTicketTitulo);
                         await _context.SaveChangesAsync();
@@ -161,7 +169,8 @@ namespace APILogin2025.Controllers
                             CampoModificado = "DESCRIPCION",
                             ValorAnterior = ticketEditar.Descripcion,
                             ValorNuevo = ticket.Descripcion,
-                            FechaCambio = fechaCambio
+                            FechaCambio = fechaCambio,
+                            UsuarioID = userId
                         };
                         _context.HistorialTickets.Add(historialTicketDescripcion);
                         await _context.SaveChangesAsync();
@@ -178,7 +187,8 @@ namespace APILogin2025.Controllers
                             CampoModificado = "PRIORIDAD",
                             ValorAnterior = ticketEditar.Prioridad.ToString(),
                             ValorNuevo = ticket.Prioridad.ToString(),
-                            FechaCambio = fechaCambio
+                            FechaCambio = fechaCambio,
+                            UsuarioID = userId
                         };
                         _context.HistorialTickets.Add(historialTicketPrioridad);
                         await _context.SaveChangesAsync();
@@ -198,7 +208,8 @@ namespace APILogin2025.Controllers
                             CampoModificado = "CATEGORIA",
                             ValorAnterior = categoriaAnterior.Nombre,
                             ValorNuevo = categoriaNueva.Nombre,
-                            FechaCambio = fechaCambio
+                            FechaCambio = fechaCambio,
+                            UsuarioID = userId
                         };
                         _context.HistorialTickets.Add(historialTicketCategoria);
                         await _context.SaveChangesAsync();
