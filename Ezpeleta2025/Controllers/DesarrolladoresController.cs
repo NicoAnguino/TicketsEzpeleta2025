@@ -15,65 +15,66 @@ namespace APILogin2025.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class DesarrolladoresController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public ClientesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public DesarrolladoresController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        // GET: api/Clientes
+        // GET: api/Desarrolladores
         //[Authorize(Roles = "ADMINISTRADOR")]
         [HttpGet]
         //[AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes()
+        public async Task<ActionResult<IEnumerable<Desarrollador>>> GetDesarrolladores()
         {
             //  var usuarioLogueadoID = HttpContext.User.Identity.Name;
             //  var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             //  var rol = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-            return await _context.Clientes.OrderBy(c => c.Nombre).ToListAsync();
+            return await _context.Desarrolladores.OrderBy(c => c.Nombre).ToListAsync();
         }
 
-        // GET: api/Clientes/5
+        // GET: api/Desarrolladores/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> GetCliente(int id)
+        public async Task<ActionResult<Desarrollador>> GetDesarrollador(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
+            var desarrollador = await _context.Desarrolladores.FindAsync(id);
 
-            if (cliente == null)
+            if (desarrollador == null)
             {
                 return NotFound();
             }
 
-            return cliente;
+            return desarrollador;
         }
 
-        // PUT: api/Clientes/5
+        // PUT: api/Desarrolladores/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        public async Task<IActionResult> PutDesarrollador(int id, Desarrollador desarrollador)
         {
-            if (id != cliente.ClienteID)
+            if (id != desarrollador.DesarrolladorID)
             {
                 return BadRequest();
             }
 
             try
             {
-                if (!_context.Clientes.Any(c => c.DNICuit == cliente.DNICuit && c.ClienteID != cliente.ClienteID))
+                if (!_context.Desarrolladores.Any(c => c.DNICuit == desarrollador.DNICuit && c.DesarrolladorID != desarrollador.DesarrolladorID))
                 {
-                    var clienteEditar = await _context.Clientes.FindAsync(id);
-                    if (clienteEditar != null)
+                    var desarrolladorEditar = await _context.Desarrolladores.FindAsync(id);
+                    if (desarrolladorEditar != null)
                     {
-                        clienteEditar.Nombre = cliente.Nombre;
-                        clienteEditar.Telefono = cliente.Telefono;
-                        clienteEditar.Observaciones = cliente.Observaciones;
-                        clienteEditar.DNICuit = cliente.DNICuit;
+                        desarrolladorEditar.Nombre = desarrollador.Nombre;
+                        desarrolladorEditar.Telefono = desarrollador.Telefono;
+                        desarrolladorEditar.Observaciones = desarrollador.Observaciones;
+                        desarrolladorEditar.DNICuit = desarrollador.DNICuit;
+                        desarrolladorEditar.PuestoLaboralID = desarrollador.PuestoLaboralID;
 
                         await _context.SaveChangesAsync();
                     }
@@ -81,7 +82,7 @@ namespace APILogin2025.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClienteExists(id))
+                if (!DesarrolladorExists(id))
                 {
                     return NotFound();
                 }
@@ -94,56 +95,56 @@ namespace APILogin2025.Controllers
             return NoContent();
         }
 
-        // POST: api/Clientes
+        // POST: api/Desarrolladores
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
+        public async Task<ActionResult<Desarrollador>> PostDesarrollador(Desarrollador desarrollador)
         {
-            if (!String.IsNullOrEmpty(cliente.Nombre) && !String.IsNullOrEmpty(cliente.DNICuit) && !String.IsNullOrEmpty(cliente.Email))
+            if (!String.IsNullOrEmpty(desarrollador.Nombre) && !String.IsNullOrEmpty(desarrollador.DNICuit) && !String.IsNullOrEmpty(desarrollador.Email))
             {
                 //VALIDAR QUE NO EXISTA CON EL MISMO NUMERO DE DOCUMENTO
-                if (!_context.Clientes.Any(c => c.DNICuit == cliente.DNICuit))
+                if (!_context.Desarrolladores.Any(c => c.DNICuit == desarrollador.DNICuit))
                 {
-                    _context.Clientes.Add(cliente);
+                    _context.Desarrolladores.Add(desarrollador);
                     await _context.SaveChangesAsync();
 
                     //ARMAMOS EL OBJETO COMPLETANDO LOS ATRIBUTOS COMPLETADOS POR EL USUARIO
                     var user = new ApplicationUser
                     {
-                        UserName = cliente.Email,
-                        Email = cliente.Email,
-                        NombreCompleto = cliente.Nombre
+                        UserName = desarrollador.Email,
+                        Email = desarrollador.Email,
+                        NombreCompleto = desarrollador.Nombre
                     };
 
                     var result = await _userManager.CreateAsync(user, "Ezpeleta2025");
                     if (result.Succeeded)
                     {
-                        await _userManager.AddToRoleAsync(user, "CLIENTE");
+                        await _userManager.AddToRoleAsync(user, "DESARROLLADOR");
                     }
                 }
 
             }
 
-            return CreatedAtAction("GetCliente", new { id = cliente.ClienteID }, cliente);
+            return CreatedAtAction("GetDesarrollador", new { id = desarrollador.DesarrolladorID }, desarrollador);
         }
 
-        // DELETE: api/Clientes/5
+        // DELETE: api/Desarrolladores/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(int id, int accion)
+        public async Task<IActionResult> DeleteDesarrollador(int id, int accion)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente == null)
+            var desarrollador = await _context.Desarrolladores.FindAsync(id);
+            if (desarrollador == null)
             {
                 return NotFound();
             }
             if (accion == 1)
             {
-                cliente.Eliminado = true;
+                desarrollador.Eliminado = true;
                 await _context.SaveChangesAsync();
             }
             else
             {
-                cliente.Eliminado = false;
+                desarrollador.Eliminado = false;
                 await _context.SaveChangesAsync();
             }
 
@@ -151,9 +152,9 @@ namespace APILogin2025.Controllers
             return NoContent();
         }
 
-        private bool ClienteExists(int id)
+        private bool DesarrolladorExists(int id)
         {
-            return _context.Clientes.Any(e => e.ClienteID == id);
+            return _context.Desarrolladores.Any(e => e.DesarrolladorID == id);
         }
     }
 }
