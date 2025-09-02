@@ -28,7 +28,7 @@ namespace APILogin2025.Controllers
         //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
         {
-           
+              _context.Database.Migrate();
             return await _context.Categorias.OrderBy(c => c.Nombre).ToListAsync();
         }
 
