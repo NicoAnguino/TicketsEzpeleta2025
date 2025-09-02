@@ -1,0 +1,62 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0">Gráficos de Resultados</h1>
+</div>
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div class="card mb-2">
+            <div class="card-header">
+                <i class="fas fa-chart-bar me-1"></i>
+                Métodos de Búsqueda
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <label class="control-label">Desde</label>
+                        <input class="form-control form-control-sm" type="date" id="FechaDesdeBuscar" />
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="control-label">Hasta</label>
+                        <input class="form-control form-control-sm" type="date" id="FechaHastaBuscar" />
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="control-label">Prioridad</label>
+                        <select class="form-control form-control-sm" id="PrioridadIDBuscar">
+                            <option value="0">[Todas las Prioridades]</option>
+                            <option value="1">Baja</option>
+                            <option value="2">Media</option>
+                            <option value="3">Alta</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="control-label">Estado</label>
+                        <select class="form-control form-control-sm" id="EstadoIDBuscar">
+                            <option value="0">[Todos los Estados]</option>
+                            <option value="1">Abierto</option>
+                            <option value="2">EnProceso</option>
+                            <option value="3">Cerrado</option>
+                            <option value="4">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-bar me-1"></i>
+                Tickets por Categorias
+            </div>
+            <div class="card-body" style="height: 48vh;">
+                <canvas id="grafico-circular"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../js/graficos/graficotickets-1.0.0.js"></script>
