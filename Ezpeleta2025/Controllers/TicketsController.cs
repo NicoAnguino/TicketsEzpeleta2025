@@ -52,13 +52,14 @@ namespace APILogin2025.Controllers
             var tickets = _context.Tickets.Include(t => t.Categoria).AsQueryable();
 
             //VER DE ACUERDO AL ROL QUE TIENE SI DEBE FILTRAR POR USUARIO O NO
-              //var usuarioLogueadoID = HttpContext.User.Identity.Name;
-             var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-             var rol = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+            //var usuarioLogueadoID = HttpContext.User.Identity.Name;
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var rol = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (rol == "CLIENTE") {
-                  tickets = tickets.Where(t => t.UsuarioClienteID == userId);
-             }
+            if (rol == "CLIENTE")
+            {
+                tickets = tickets.Where(t => t.UsuarioClienteID == userId);
+            }
 
             DateTime fechaDesde = new DateTime();
             bool fechaDesdeValida = DateTime.TryParse(filtro.FechaDesde, out fechaDesde);
@@ -66,22 +67,25 @@ namespace APILogin2025.Controllers
             DateTime fechaHasta = new DateTime();
             bool fechaHastaValida = DateTime.TryParse(filtro.FechaHasta, out fechaHasta);
 
-            if (fechaDesdeValida && fechaHastaValida) {
+            if (fechaDesdeValida && fechaHastaValida)
+            {
                 fechaHasta = fechaHasta.AddHours(23);
                 fechaHasta = fechaHasta.AddMinutes(59);
                 fechaHasta = fechaHasta.AddSeconds(59);
-                 tickets = tickets.Where(t => t.FechaCreacion >= fechaDesde && t.FechaCreacion <= fechaHasta);
+                tickets = tickets.Where(t => t.FechaCreacion >= fechaDesde && t.FechaCreacion <= fechaHasta);
             }
 
             if (filtro.CategoriaID > 0)
                 tickets = tickets.Where(t => t.CategoriaID == filtro.CategoriaID);
 
-            if (filtro.Prioridad > 0) {
-                 tickets = tickets.Where(t => t.Prioridad == (PrioridadTicket)filtro.Prioridad);
+            if (filtro.Prioridad > 0)
+            {
+                tickets = tickets.Where(t => t.Prioridad == (PrioridadTicket)filtro.Prioridad);
             }
 
-            if (filtro.Estado > 0) {
-                 tickets = tickets.Where(t => t.Estado == (EstadoTicket)filtro.Estado);
+            if (filtro.Estado > 0)
+            {
+                tickets = tickets.Where(t => t.Estado == (EstadoTicket)filtro.Estado);
             }
 
             foreach (var ticket in tickets.OrderByDescending(t => t.FechaCreacion))
@@ -107,17 +111,18 @@ namespace APILogin2025.Controllers
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
             var ticket = await _context.Tickets.FindAsync(id);
-           
+
             if (ticket == null)
             {
                 return NotFound();
             }
 
             var usuarioCrea = _context.Users.Where(u => u.Id == ticket.UsuarioClienteID).SingleOrDefault();
-            if (usuarioCrea != null) {
+            if (usuarioCrea != null)
+            {
                 ticket.UsuarioClienteEmail = usuarioCrea.Email;
             }
-            
+
             return ticket;
         }
 
@@ -239,7 +244,7 @@ namespace APILogin2025.Controllers
         [HttpPost]
         public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
         {
-              var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             //LO QUE DEBEMOS HACER ES GUARDAR LOS SIGUIENTES DATOS FIJOS
             //EL ESTADO DEL TICKET POR DEFECTO ES ABIERTO
             ticket.Estado = EstadoTicket.Abierto;
@@ -252,6 +257,62 @@ namespace APILogin2025.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTicket", new { id = ticket.TicketID }, ticket);
+        }
+
+
+
+
+        [HttpPost("grafico")]
+        public async Task<ActionResult<IEnumerable<TicketsPorCategoria>>> TicketsPorCategoria([FromBody] FiltroTicket filtro)
+        {
+            List<TicketsPorCategoria> listadoCategoriasMostrar = new List<TicketsPorCategoria>();
+
+            var tickets = _context.Tickets.Include(t => t.Categoria).AsQueryable();
+
+            DateTime fechaDesde = new DateTime();
+            bool fechaDesdeValida = DateTime.TryParse(filtro.FechaDesde, out fechaDesde);
+
+            DateTime fechaHasta = new DateTime();
+            bool fechaHastaValida = DateTime.TryParse(filtro.FechaHasta, out fechaHasta);
+
+            if (fechaDesdeValida && fechaHastaValida)
+            {
+                fechaHasta = fechaHasta.AddHours(23);
+                fechaHasta = fechaHasta.AddMinutes(59);
+                fechaHasta = fechaHasta.AddSeconds(59);
+                tickets = tickets.Where(t => t.FechaCreacion >= fechaDesde && t.FechaCreacion <= fechaHasta);
+            }
+
+            if (filtro.Prioridad > 0)
+            {
+                tickets = tickets.Where(t => t.Prioridad == (PrioridadTicket)filtro.Prioridad);
+            }
+
+            if (filtro.Estado > 0)
+            {
+                tickets = tickets.Where(t => t.Estado == (EstadoTicket)filtro.Estado);
+            }
+
+            foreach (var ticket in tickets.OrderByDescending(t => t.FechaCreacion))
+            {
+                var categoriaMostrar = listadoCategoriasMostrar.Where(c => c.CategoriaID == ticket.CategoriaID).SingleOrDefault();
+                if (categoriaMostrar == null)
+                {
+                    categoriaMostrar = new TicketsPorCategoria
+                    {
+                        CategoriaID = ticket.CategoriaID,
+                        Nombre = ticket.CategoriaString,
+                        Cantidad = 1
+                    };
+                    listadoCategoriasMostrar.Add(categoriaMostrar);
+                }
+                else
+                {
+                    categoriaMostrar.Cantidad += 1;
+                }
+            }
+
+            return listadoCategoriasMostrar.ToList();
         }
 
         private bool TicketExists(int id)
