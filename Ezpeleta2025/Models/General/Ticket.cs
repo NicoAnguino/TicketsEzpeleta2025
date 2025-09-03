@@ -34,17 +34,6 @@ namespace Ezpeleta2025.Models.General
         public virtual Categoria? Categoria { get; set; }
     }
 
-    public class VistaTickets
-    {
-        public int TicketID { get; set; }
-        public string Titulo { get; set; }
-        public PrioridadTicket Prioridad { get; set; }
-        public string EstadoString { get; set; }
-        public string FechaCreacionString { get; set; }
-        public string PrioridadString { get; set; }
-        public string? CategoriaString { get; set; }
-    }
-
     public enum EstadoTicket
     {
         Abierto = 1,

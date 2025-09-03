@@ -1,4 +1,5 @@
 using Ezpeleta2025.Models.General;
+using Ezpeleta2025.ModelsVistas;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -314,6 +315,92 @@ namespace APILogin2025.Controllers
 
             return listadoCategoriasMostrar.ToList();
         }
+
+
+
+
+
+
+        [HttpPost("ticketsporcategoria")]
+        public async Task<ActionResult<IEnumerable<CategoriaTickets>>> TicketsPorCliente([FromBody] FiltroTicket filtro)
+        {
+            List<CategoriaTickets> categoriasMostrar = new List<CategoriaTickets>();
+
+            var tickets = _context.Tickets.Include(t => t.Categoria).AsQueryable();
+
+            //VER DE ACUERDO AL ROL QUE TIENE SI DEBE FILTRAR POR USUARIO O NO
+            //var usuarioLogueadoID = HttpContext.User.Identity.Name;
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var rol = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (rol == "CLIENTE")
+            {
+                tickets = tickets.Where(t => t.UsuarioClienteID == userId);
+            }
+
+            DateTime fechaDesde = new DateTime();
+            bool fechaDesdeValida = DateTime.TryParse(filtro.FechaDesde, out fechaDesde);
+
+            DateTime fechaHasta = new DateTime();
+            bool fechaHastaValida = DateTime.TryParse(filtro.FechaHasta, out fechaHasta);
+
+            if (fechaDesdeValida && fechaHastaValida)
+            {
+                fechaHasta = fechaHasta.AddHours(23);
+                fechaHasta = fechaHasta.AddMinutes(59);
+                fechaHasta = fechaHasta.AddSeconds(59);
+                tickets = tickets.Where(t => t.FechaCreacion >= fechaDesde && t.FechaCreacion <= fechaHasta);
+            }
+
+            if (filtro.CategoriaID > 0)
+                tickets = tickets.Where(t => t.CategoriaID == filtro.CategoriaID);
+
+            if (filtro.Prioridad > 0)
+            {
+                tickets = tickets.Where(t => t.Prioridad == (PrioridadTicket)filtro.Prioridad);
+            }
+
+            if (filtro.Estado > 0)
+            {
+                tickets = tickets.Where(t => t.Estado == (EstadoTicket)filtro.Estado);
+            }
+
+            foreach (var ticket in tickets.OrderByDescending(t => t.FechaCreacion))
+            {
+                //POR CADA TICKETS VAMOS A BUSCAR EL CLIENTE  
+                var categoriaMostrar = categoriasMostrar.Where(c => c.CategoriaID == ticket.CategoriaID).SingleOrDefault();
+                if (categoriaMostrar == null)
+                {
+                    categoriaMostrar = new CategoriaTickets
+                    {
+                        CategoriaID = ticket.CategoriaID,
+                        Nombre = ticket.CategoriaString,
+                        Tickets = new List<VistaTickets>()
+                    };
+                    categoriasMostrar.Add(categoriaMostrar);
+                }
+
+                var ticketMostrar = new VistaTickets
+                {
+                    TicketID = ticket.TicketID,
+                    Titulo = ticket.Titulo,
+                    FechaCreacionString = ticket.FechaCreacionString,
+                    Prioridad = ticket.Prioridad,
+                    EstadoString = ticket.EstadoString,
+                    CategoriaString = ticket.CategoriaString,
+                    PrioridadString = ticket.PrioridadString
+                };
+                categoriaMostrar.Tickets.Add(ticketMostrar);
+            }
+
+            return categoriasMostrar.ToList();
+        }
+
+
+
+
+
+
 
         private bool TicketExists(int id)
         {
