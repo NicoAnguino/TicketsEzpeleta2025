@@ -1,0 +1,55 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0">Listado de Tickets por Categoría</h1>
+</div>
+
+
+<div class="row">
+  <div class="col-md-2 mb-2">
+        <label class="control-label">Desde</label>
+        <input class="form-control form-control-sm" type="date" id="FechaDesdeBuscar"/>
+    </div>
+  <div class="col-md-2 mb-2">
+        <label class="control-label">Hasta</label>
+        <input class="form-control form-control-sm" type="date" id="FechaHastaBuscar"/>
+    </div>
+    <div class="col-md-3 mb-2">
+        <label class="control-label">Categoría</label>
+        <select class="form-control form-control-sm" id="CategoriaIDBuscar"></select>
+    </div>
+    <div class="col-md-2 mb-2">
+        <label class="control-label">Prioridad</label>
+        <select class="form-control form-control-sm" id="PrioridadIDBuscar">
+            <option value="0">[Todas las Prioridades]</option>
+            <option value="1">Baja</option>
+            <option value="2">Media</option>
+            <option value="3">Alta</option>
+        </select>
+    </div>
+    <div class="col-md-3 mb-2">
+        <label class="control-label">Estado</label>
+        <select class="form-control form-control-sm" id="EstadoIDBuscar">
+            <option value="0">[Todos los Estados]</option>
+            <option value="1">Abierto</option>
+            <option value="2">EnProceso</option>
+            <option value="3">Cerrado</option>
+            <option value="4">Cancelado</option>
+        </select>
+    </div>
+</div>
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-sm" id="tablaTickets" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th class="text-center" style="width: 150px;">Fecha Alta</th>
+                <th>Título</th>
+                <th class="text-center" style="width: 100px;">Prioridad</th>
+                <th class="text-center" style="width: 100px;">Estado</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script src="../js/fetch/clientetickets.js"></script>
