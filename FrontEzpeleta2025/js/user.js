@@ -38,3 +38,10 @@ function getToken(){
     return localStorage.getItem("token");
 }
 
+async function Migrar(){
+    const apiBase = `${BASE_API_URL}auth`;
+    const response = await fetch(`${apiBase}`);
+    const result = await response.json();
+    console.log(result);
+}
+
