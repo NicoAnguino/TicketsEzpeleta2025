@@ -1,6 +1,7 @@
 using Ezpeleta2025.Models.Usuario;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -36,6 +37,27 @@ public class AuthController : ControllerBase
         _rolManager = rolManager;
         _configuration = configuration;
     }
+
+
+    [HttpGet]
+    public async Task<ActionResult<bool>> Migrar()
+    {
+        bool resultado = false;
+
+        try
+        {
+            // Aplica las migraciones pendientes
+            _context.Database.Migrate();
+            resultado = true;
+        }
+        catch (System.Exception ex)
+        {
+            var error = ex.Message;
+        }
+
+        return resultado;
+    }
+
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)

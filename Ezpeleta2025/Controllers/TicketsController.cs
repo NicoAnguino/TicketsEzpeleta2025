@@ -367,16 +367,20 @@ namespace APILogin2025.Controllers
 
             foreach (var ticket in tickets.OrderByDescending(t => t.FechaCreacion))
             {
-                //POR CADA TICKETS VAMOS A BUSCAR EL CLIENTE  
+                //POR CADA TICKETS VAMOS A BUSCAR SI EXISTE ESA CATEGORIA 
                 var categoriaMostrar = categoriasMostrar.Where(c => c.CategoriaID == ticket.CategoriaID).SingleOrDefault();
+                //PREGUNTAMOS SI ENCUENTRA ESA CATEGORIA EN PARTICULAR EN EL LISTADO DE CATEGORIAS MOSTRAR
                 if (categoriaMostrar == null)
                 {
+                    //SI NO LO ENCUENTRA LO AGREGA AL LISTADO
+                    //PARA ELLO LO ARMOO EN UN OBJETO PARA LUEGO INSERTARLO
                     categoriaMostrar = new CategoriaTickets
                     {
                         CategoriaID = ticket.CategoriaID,
                         Nombre = ticket.CategoriaString,
                         Tickets = new List<VistaTickets>()
                     };
+                    //SE INSERTA EL OBJETO
                     categoriasMostrar.Add(categoriaMostrar);
                 }
 

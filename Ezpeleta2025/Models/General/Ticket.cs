@@ -24,6 +24,8 @@ namespace Ezpeleta2025.Models.General
 
         [NotMapped]
         public string? CategoriaString { get { return Categoria?.Nombre; } }
+
+        public DateTime FechaComienzo { get; set; }
         public DateTime FechaCierre { get; set; }
         public int CategoriaID { get; set; }
         public string? UsuarioClienteID { get; set; }
